@@ -12,12 +12,59 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
+generator erd {
+  provider = "prisma-erd-generator"
+}
 
 model Habit {
-  id         String @id @default(uuid())
+  id         String   @id @default(uuid())
   title      String
   created_at DateTime
 
+  dayHabits DayHabit[]
+  weekDays  HabbitWeekDays[]
+
   @@map("habits")
 }
+
+model HabbitWeekDays {
+  id       String @id @default(uuid())
+  habit_id String
+  week_day Int
+
+  habit Habit @relation(fields: [habit_id], references: [id])
+
+  @@unique([habit_id, week_day])
+  @@map("habit_week_days")
+}
+
+model Day {
+  //só irá ter registro na tabela de dias quando, no referido dia,
+  //algum hábito for realizado
+  id   String   @id @default(uuid())
+  date DateTime
+
+  dayHabits DayHabit[]
+
+  @@unique([date])
+  @@map("days")
+}
+
+model DayHabit {
+  //na tabela pivô/de relacionamento, nós guardamos os id's das tabelas
+  //que se relacionam com ele. No caso, day_id e habit_id
+  id String @id @default(uuid())
+
+  day_id   String
+  habit_id String
+
+  day   Day   @relation(fields: [day_id], references: [id])
+  habit Habit @relation(fields: [habit_id], references: [id])
+
+  @@unique([day_id, habit_id])
+  @@map("day_habits")
+}
+
+//um relacionamento entre tabelas (relacionamento n pra n)
+//gera uma tabela pivô, que correlaciona uma tabela a outra e guarda aquele relacionamento
+//neste caso, nossa tabela pivô será a DAYHABIT
