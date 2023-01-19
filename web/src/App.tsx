@@ -1,19 +1,27 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
-import Habit from "./components/Habit";
+import "./styles/global.css";
 
-function App() {
+// import Habit from "./components/Habit";
+
+import logoImage from "./assets/logo.svg";
+
+export function App() {
   return (
-    <div>
-      <Habit completed={3} />
-      <Habit completed={10} />
-      <Habit completed={20} />
+    <div className="w-screen h-screen flex justify-center items-center">
+      <div className="w-full max-w-5xl px-6 flex  flex-col gap-16">
+        <div className="w-full max-w-3xl mx-auto flex items-center justify-between">
+          <img src={logoImage} alt="Habits" />
+
+          <button
+            type="button"
+            className="border border-violet-500 font-semibold rounded-lg px-6 py-4 "
+          >
+            Novo Hábito
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default App;
 
 // Componente: Reaproveitar/ isolar
 // Propriedade: Uma informação enviada para modificar um componente visual ou comportamental
